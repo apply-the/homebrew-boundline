@@ -10,8 +10,8 @@ brew install boundline
 boundline doctor --install
 ```
 
-The `boundline` formula builds Boundline `0.41.0` from the tagged source
-repository and installs the pinned Canon `0.40.0` companion alongside it so the
+The `boundline` formula builds the latest tagged Boundline release from the
+source repository and stages the Canon companion pinned by that release so the
 default `doctor --install` pairing story stays intact.
 
 ## Local Tap Development
@@ -23,26 +23,26 @@ brew reinstall apply-the/boundline/boundline
 
 ## Maintainer Notes
 
-This tap is updated from the main Boundline repository by
-`/Users/rt/workspace/synod/.github/workflows/sync-homebrew-tap.yml`.
-
-Required setup in the source repository:
-
-- Add the secret `HOMEBREW_TAP_GITHUB_TOKEN` in `apply-the/boundline`.
-- The token must be able to read metadata and write contents plus pull requests
-	in `apply-the/homebrew-boundline`.
-- A fine-grained PAT scoped to `apply-the/homebrew-boundline` with
-	`Contents: Read and write`, `Pull requests: Read and write`, and
-	`Metadata: Read-only` is sufficient.
+This tap updates itself from the latest tagged Boundline release via
+`.github/workflows/sync-latest-boundline-tag.yml`.
 
 Operational notes:
 
-- The sync workflow regenerates `distribution/homebrew/Formula/boundline.rb` in
-	the source repo and opens a PR against this tap.
-- No GitHub Actions secret is required in this tap repository unless you add
-	tap-local workflows later.
-- If branch protection is enabled here, ensure the token owner can push a
-	branch and open pull requests.
+- The tap-local workflow resolves the latest semver tag from `apply-the/boundline`
+	and copies `distribution/homebrew/Formula/boundline.rb` from that exact tag.
+- The workflow uses this repository's `GITHUB_TOKEN` with `contents: write` to
+	commit directly to `main` when the formula changes.
+- If branch protection is enabled here, allow GitHub Actions to push to `main`
+	or replace the default token with a repository secret for a bot account.
+
+## Release Checklist
+
+1. In `apply-the/boundline`, push the release tag after the tagged source repo
+	contains the correct `distribution/homebrew/Formula/boundline.rb`.
+2. Wait for or manually run `.github/workflows/sync-latest-boundline-tag.yml`
+	in this repository.
+3. Verify the published tap with `brew reinstall apply-the/boundline/boundline`
+	and `boundline doctor --install`.
 
 ## Contents
 
