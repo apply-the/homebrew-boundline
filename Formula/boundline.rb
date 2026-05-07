@@ -9,24 +9,10 @@ class Boundline < Formula
 
   head "https://github.com/apply-the/boundline", branch: "main", using: :git
 
-  livecheck do
-    url :stable
-    strategy :git do |tags|
-      tags.filter_map { |t| t[/^(\d+\.\d+\.\d+)$/, 1] }.max_by { |v| Gem::Version.new(v) }
-    end
-  end
-
   depends_on "rustup" => :build
 
   resource "canon-source" do
     url "https://github.com/apply-the/canon", using: :git, tag: "0.40.0"
-
-    livecheck do
-      url "https://github.com/apply-the/canon"
-      strategy :git do |tags|
-        tags.filter_map { |t| t[/^(\d+\.\d+\.\d+)$/, 1] }.max_by { |v| Gem::Version.new(v) }
-      end
-    end
   end
 
   def install
