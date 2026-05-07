@@ -3,16 +3,30 @@
 class Boundline < Formula
   desc "Local delivery orchestrator for bounded engineering work"
   homepage "https://github.com/apply-the/boundline"
-  url "https://github.com/apply-the/boundline", using: :git, tag: "0.42.0"
-  version "0.42.0"
+  url "https://github.com/apply-the/boundline", using: :git, tag: "0.43.0"
+  version "0.43.0"
   license "MIT"
 
   head "https://github.com/apply-the/boundline", branch: "main", using: :git
+
+  livecheck do
+    url :stable
+    strategy :git do |tags|
+      tags.filter_map { |t| t[/^(\d+\.\d+\.\d+)$/, 1] }.max_by { |v| Gem::Version.new(v) }
+    end
+  end
 
   depends_on "rustup" => :build
 
   resource "canon-source" do
     url "https://github.com/apply-the/canon", using: :git, tag: "0.40.0"
+
+    livecheck do
+      url "https://github.com/apply-the/canon"
+      strategy :git do |tags|
+        tags.filter_map { |t| t[/^(\d+\.\d+\.\d+)$/, 1] }.max_by { |v| Gem::Version.new(v) }
+      end
+    end
   end
 
   def install
@@ -45,7 +59,7 @@ class Boundline < Formula
 
   def caveats
     <<~EOS
-      Run boundline doctor --install after install or upgrade to verify the Boundline 0.42.0 + Canon 0.40.0 pairing.
+      Run boundline doctor --install after install or upgrade to verify the Boundline 0.43.0 + Canon 0.40.0 pairing.
     EOS
   end
 
